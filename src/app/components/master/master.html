@@ -1,0 +1,32 @@
+<p>master works!</p>
+<div class="row">
+  <div class="col-12 text-center">
+    <div class="btn-group">
+      <button
+        type="button"
+        [class]="'btn ' + (currentComponent === 'Roles' ? 'btn-success' : 'btn-primary')"
+        (click)="switchComponent('Roles')"
+      >
+        Roles
+      </button>
+      <button
+        type="button"
+        [class]="'btn ' + (currentComponent === 'Designation' ? 'btn-success' : 'btn-primary')"
+        (click)="switchComponent('Designation')"
+      >
+        Designation
+      </button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    @if (currentComponent === "Roles") {
+    <app-roles></app-roles>
+    } @else if (currentComponent === "Designation") {
+    <app-designation></app-designation>
+    } @else {
+    <p>Wybierz komponent</p>
+    }
+  </div>
+</div>

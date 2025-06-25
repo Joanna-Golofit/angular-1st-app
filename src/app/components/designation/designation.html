@@ -1,5 +1,12 @@
 <div class="container mt-4">
   <h2>Designations</h2>
+
+  @if (isLoading) {
+  <div class="col-12 text-center">
+    <div class="spinner-border text-primary"></div>
+  </div>
+  }
+  
   @if (designationList.length > 0) {
   <div class="row">
     @for (designation of designationList; track designation.designationId) {
@@ -15,7 +22,7 @@
     </div>
     }
   </div>
-  } @else {
-  <div class="alert alert-info" role="alert">Loading data...</div>
+  <!-- } @else {
+  <div class="alert alert-info" role="alert">Loading data...</div> -->
   }
 </div>

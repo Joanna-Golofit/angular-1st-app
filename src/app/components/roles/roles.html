@@ -1,6 +1,12 @@
 <div class="container mt-4">
   <h2>Roles</h2>
 
+  @if (isLoading) {
+  <div class="col-12 text-center">
+    <div class="spinner-border text-primary"></div>
+  </div>
+  }
+
   @if (roleList.length > 0) {
   <ul class="list-group">
     @for (role of roleList; track role.roleId) {
@@ -12,15 +18,15 @@
     </li>
     }
   </ul>
-  } @else {
-  <div class="alert alert-info" role="alert">Loading data...</div>
+  <!-- } @else {
+  <div class="alert alert-info" role="alert">Loading data...</div> -->
   }
-  <div class="col-4">
+  <!-- <div class="col-4">
     <select>
       <option value="">-- Wybierz rolę --</option>
       @for (role of roleList; track role.roleId) {
       <option [value]="role.roleId">{{ role.role }}</option>
       }
     </select>
-  </div>
+  </div> -->
 </div>

@@ -22,5 +22,9 @@ export const routes: Routes = [
     {
         path: 'client',
         component: Client
+    },
+    {
+        path: '**',
+        redirectTo: '/master'
     }
 ];

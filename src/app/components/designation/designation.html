@@ -1,13 +1,21 @@
-<p>designation works!</p>
-<div class="row mx-3">
+<div class="container mt-4">
+  <h2>Designations</h2>
+  @if (designationList.length > 0) {
+  <div class="row">
     @for (designation of designationList; track designation.designationId) {
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-          <div class="card text-center">
-            <div class="card-body">
-              <h6 class="card-title">{{ designation.designation }}</h6>
-              <span class="badge bg-secondary">{{ designation.designationId }}</span>
-            </div>
-          </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <h6 class="card-title">{{ designation.designation }}</h6>
+          <!-- <span class="badge bg-secondary">{{ designation.designationId }}</span> -->
+          <a href="#" class="card-link">Edit</a>
+          <a href="#" class="card-link">Delete</a>
         </div>
-      }
+      </div>
+    </div>
+    }
+  </div>
+  } @else {
+  <div class="alert alert-info" role="alert">Loading data...</div>
+  }
 </div>

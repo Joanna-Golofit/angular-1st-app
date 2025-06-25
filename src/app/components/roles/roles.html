@@ -1,28 +1,26 @@
-<p>roles works!</p>
-
 <div class="container mt-4">
-    <h2>Lista Ról</h2>
-    
-    @if (roleList.length > 0) {
-      <ul class="list-group">
-        @for (role of roleList; track role.roleId) {
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ role.role }}
-            <span class="badge bg-primary rounded-pill">ID: {{ role.roleId }}</span>
-          </li>
-        }
-      </ul>
-    } @else {
-      <div class="alert alert-info" role="alert">
-        Ładowanie ról...
-      </div>
+  <h2>Roles</h2>
+
+  @if (roleList.length > 0) {
+  <ul class="list-group">
+    @for (role of roleList; track role.roleId) {
+    <li
+      class="list-group-item d-flex justify-content-between align-items-center"
+    >
+      {{ role.role }}
+      <span class="badge bg-primary rounded-pill">ID: {{ role.roleId }}</span>
+    </li>
     }
-    <div class="col-4">
-        <select>
-            <option value="">-- Wybierz rolę --</option>
-            @for (role of roleList; track role.roleId) {
-                <option [value]="role.roleId">{{ role.role }}</option>
-            }
-        </select>
-    </div>
+  </ul>
+  } @else {
+  <div class="alert alert-info" role="alert">Loading data...</div>
+  }
+  <div class="col-4">
+    <select>
+      <option value="">-- Wybierz rolę --</option>
+      @for (role of roleList; track role.roleId) {
+      <option [value]="role.roleId">{{ role.role }}</option>
+      }
+    </select>
   </div>
+</div>

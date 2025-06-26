@@ -24,8 +24,10 @@ export class Client implements OnInit {
 
   isLoading: boolean = true;
   isSaving: boolean = false;
+  isEdit: boolean = false;
   isDeleting: boolean = false;
   deletingClientId: number | null = null;
+  editingClientId: number | null = null;
 
   clientList: ClientClass[] = [];
 
@@ -35,6 +37,7 @@ export class Client implements OnInit {
 
   private initializeForm() {
     this.clientForm = this.fb.group({
+      clientId: [0],
       contactPersonName: [
         'Ania',
         [Validators.required, Validators.minLength(2)],
@@ -100,6 +103,8 @@ export class Client implements OnInit {
         next: (res: APIResponseModel) => {
           if (res.result) {
             this.isSaving = false;
+            this.isEdit = false;
+            this.editingClientId = null;
             alert(res.message);
             this.clientForm.reset();
             this.loadClient();
@@ -109,10 +114,31 @@ export class Client implements OnInit {
         },
         error: (error: any) => {
           this.isSaving = false;
+          this.editingClientId = null;
           alert('Error: ' + JSON.stringify(error.error));
         },
       });
     }
+  }
+  // onEditClient(client: ClientClass) {
+  //   this.clientForm = {...client};
+  //   console.log('onEditClient');
+
+  // }
+
+  onEditClient(client: ClientClass) {
+    // console.log("przed zmiana", this.clientForm);
+    console.log('client fields:', Object.keys(client));
+    this.editingClientId = client.clientId;
+    this.isEdit = true;
+    const clientData = {
+      ...client,
+      EmployeeStrength: Number((client as any).employeeStrength) || 0, // ← Konwertuj 
+    };
+    console.log('client', client);
+    this.clientForm.patchValue(clientData);
+    this.clientForm.markAllAsTouched();
+    console.log('onEditClient');
   }
 
   onDeleteClient(clientId: number) {
@@ -122,7 +148,7 @@ export class Client implements OnInit {
     }
     // this.isDeleting = true;
     this.deletingClientId = clientId;
-    
+
     this.clientService.deleteClientById(clientId).subscribe({
       next: (res: APIResponseModel) => {
         if (res.result) {
@@ -154,5 +180,8 @@ export class Client implements OnInit {
 
   onReset() {
     console.log('onReset');
+    this.clientForm.reset();
+    this.isEdit = false;
+    this.editingClientId = null;
   }
 }

@@ -38,15 +38,29 @@
                   <td>{{ client.city }}</td>
                   <td>
                     <div class="d-flex gap-1">
-                      <button 
-                      class="btn btn-sm btn-outline-primary me-1">
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      <button (click)="onDeleteClient(client.clientId)" class="btn btn-sm btn-outline-danger" style="width: 33px; height: 33px;" >
-                        @if (deletingClientId === client.clientId) {
+                      <button
+                        (click)="onEditClient(client)"
+                        class="btn btn-sm btn-outline-primary me-1"
+                        style="width: 33px; height: 33px"
+                      >
+                      @if (editingClientId === client.clientId) {
                         <span class="spinner-border spinner-border-sm" role="status"></span>
+                      } @else {
+                        <i class="fas fa-edit"></i>
+                      }
+                      </button>
+                      <button
+                        (click)="onDeleteClient(client.clientId)"
+                        class="btn btn-sm btn-outline-danger"
+                        style="width: 33px; height: 33px"
+                      >
+                        @if (deletingClientId === client.clientId) {
+                        <span
+                          class="spinner-border spinner-border-sm"
+                          role="status"
+                        ></span>
                         } @else {
-                          <i class="fas fa-trash"></i>
+                        <i class="fas fa-trash"></i>
                         }
                       </button>
                     </div>
@@ -71,7 +85,7 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-header bg-success text-white">
-          <h4 class="mb-0">New Client</h4>
+          <h4 class="mb-0">{{isEdit ? 'Edit' : 'New'}} Client</h4>
         </div>
         <div class="card-body">
           <form [formGroup]="clientForm" (ngSubmit)="onSaveClient()">
@@ -249,8 +263,10 @@
                   class="spinner-border spinner-border-sm me-2"
                   role="status"
                 ></span>
-                Saving... } @else { Save Client }
-              </button>
+                Saving... } @else { 
+                    {{ isEdit ? 'Update' : 'Save2'}} Client
+                }
+            </button>
             </div>
           </form>
         </div>

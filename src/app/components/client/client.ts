@@ -25,6 +25,8 @@ export class Client implements OnInit {
   isLoading: boolean = true;
   isSaving: boolean = false;
   isDeleting: boolean = false;
+  deletingClientId: number | null = null;
+
   clientList: ClientClass[] = [];
 
   clientService = inject(ClientService);
@@ -71,7 +73,6 @@ export class Client implements OnInit {
       this.clientList = res.data;
       this.isLoading = false;
     });
-
   }
 
   onSaveClient() {
@@ -108,8 +109,6 @@ export class Client implements OnInit {
         },
         error: (error: any) => {
           this.isSaving = false;
-          console.log('Full error:', error);
-          console.log('Error details:', error.error);
           alert('Error: ' + JSON.stringify(error.error));
         },
       });
@@ -117,12 +116,41 @@ export class Client implements OnInit {
   }
 
   onDeleteClient(clientId: number) {
-    this.isDeleting = true;
-    this.clientService.deleteClientById(clientId).subscribe((res: APIResponseModel) => {
-      this.loadClient();
-      this.isDeleting = false;
+    const shallDelete = confirm('Are you sure you want to delete this client?');
+    if (!shallDelete) {
+      return;
+    }
+    // this.isDeleting = true;
+    this.deletingClientId = clientId;
+    
+    this.clientService.deleteClientById(clientId).subscribe({
+      next: (res: APIResponseModel) => {
+        if (res.result) {
+          // this.isDeleting = false;
+          this.deletingClientId = null;
+          // alert(res.message);
+          this.clientForm.reset();
+          this.loadClient();
+        } else {
+          alert(res.message);
+          this.deletingClientId = null;
+        }
+      },
+      error: (error: any) => {
+        // this.isDeleting = false;
+        this.deletingClientId = null;
+        alert('Error: ' + JSON.stringify(error.error));
+      },
     });
   }
+
+  // onDeleteClient(clientId: number) {
+  //   this.isDeleting = true;
+  //   this.clientService.deleteClientById(clientId).subscribe((res: APIResponseModel) => {
+  //     this.loadClient();
+  //     this.isDeleting = false;
+  //   });
+  // }
 
   onReset() {
     console.log('onReset');

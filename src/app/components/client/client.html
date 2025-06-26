@@ -1,1 +1,255 @@
 <p>client works!</p>
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- LISTA KLIENTÓW -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Clients List</h4>
+        </div>
+        <div class="card-body p-0">
+          @if (isLoading) {
+          <div class="text-center mt-4">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading data...</p>
+          </div>
+          } @else if (clientList.length > 0) {
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>Person Name</th>
+                  <th>Company</th>
+                  <th>Contact</th>
+                  <th>City</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (client of clientList; track client.clientId) {
+                <tr>
+                  <td>{{ client.clientId }}</td>
+                  <td>{{ client.contactPersonName }}</td>
+                  <td>{{ client.companyName }}</td>
+                  <td>{{ client.contactNo }}</td>
+                  <td>{{ client.city }}</td>
+                  <td>
+                    <div class="d-flex gap-1">
+                      <button class="btn btn-sm btn-outline-primary me-1">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          }
+          <!-- @else { 
+          <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            No clients found. Add your first client!
+          </div>
+        } -->
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMULARZ -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          <h4 class="mb-0">New Client</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="clientForm" (ngSubmit)="onSaveClient()">
+            <!-- Row 1: Person Name & Company Name -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="contactPersonName" class="form-label"
+                  >Contact Person Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="contactPersonName"
+                  formControlName="contactPersonName"
+                  placeholder="Enter person name"
+                  [class.is-invalid]="isFieldInvalid('contactPersonName')"
+                />
+                <div class="invalid-feedback">
+                  Person name is required (min 2 characters)
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="companyName" class="form-label">Company Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="companyName"
+                  formControlName="companyName"
+                  placeholder="Enter company name"
+                  [class.is-invalid]="isFieldInvalid('companyName')"
+                />
+                <div class="invalid-feedback">Company name is required</div>
+              </div>
+            </div>
+
+            <!-- Row 2: Contact No & City -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="contactNo" class="form-label">Contact No</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="contactNo"
+                  formControlName="contactNo"
+                  placeholder="Enter phone number"
+                  [class.is-invalid]="isFieldInvalid('contactNo')"
+                />
+                <div class="invalid-feedback">
+                  Enter valid phone number (6-12 digits)
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="city" class="form-label">City</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="city"
+                  formControlName="city"
+                  placeholder="Enter city"
+                  [class.is-invalid]="isFieldInvalid('city')"
+                />
+                <div class="invalid-feedback">City is required</div>
+              </div>
+            </div>
+
+            <!-- Row 3: State & Pincode -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="state" class="form-label">State</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="state"
+                  formControlName="state"
+                  placeholder="Enter state"
+                  [class.is-invalid]="isFieldInvalid('state')"
+                />
+                <div class="invalid-feedback">State is required</div>
+              </div>
+              <div class="col-md-6">
+                <label for="pincode" class="form-label">Pincode</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="pincode"
+                  formControlName="pincode"
+                  placeholder="Enter 6 digits pincode"
+                  [class.is-invalid]="isFieldInvalid('pincode')"
+                />
+                <div class="invalid-feedback">Enter valid 6-digit pincode</div>
+              </div>
+            </div>
+
+            <!-- Row 4: Address & Employee Strength -->
+            <div class="row mb-3">
+              <div class="col-md-8">
+                <label for="address" class="form-label">Address</label>
+                <textarea
+                  class="form-control"
+                  id="address"
+                  formControlName="address"
+                  rows="3"
+                  placeholder="Enter full address"
+                  [class.is-invalid]="isFieldInvalid('address')"
+                ></textarea>
+                <div class="invalid-feedback">Address is required</div>
+              </div>
+              <div class="col-md-4">
+                <label for="EmployeeStrength" class="form-label"
+                  >Employee Strength</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="EmployeeStrength"
+                  formControlName="EmployeeStrength"
+                  placeholder="Number of employees"
+                  min="1"
+                  [class.is-invalid]="isFieldInvalid('EmployeeStrength')"
+                />
+                <div class="invalid-feedback">
+                  Employee strength is required
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 5: GstNo & RegNo -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label for="gstNo" class="form-label">GstNo</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="gstNo"
+                  formControlName="gstNo"
+                  placeholder="GST Number"
+                  [class.is-invalid]="isFieldInvalid('gstNo')"
+                />
+                <div class="invalid-feedback">GST Number is required</div>
+              </div>
+              <div class="col-md-6">
+                <label for="regNo" class="form-label">RegNo</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="regNo"
+                  formControlName="regNo"
+                  placeholder="Registration Number"
+                  [class.is-invalid]="isFieldInvalid('regNo')"
+                />
+                <div class="invalid-feedback">
+                  Registration Number is required
+                </div>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-end gap-2">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="onReset()"
+                [disabled]="isSaving"
+              >
+                Reset
+              </button>
+              <button
+                type="submit"
+                class="btn"
+                [class]="(!clientForm.valid || isSaving) ? 'btn-secondary' : 'btn-success'"
+                [disabled]="clientForm.invalid || isSaving"
+              >
+                @if (isSaving) {
+                <span
+                  class="spinner-border spinner-border-sm me-2"
+                  role="status"
+                ></span>
+                Saving... } @else { Save Client }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

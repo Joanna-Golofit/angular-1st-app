@@ -24,6 +24,7 @@ export class Client implements OnInit {
 
   isLoading: boolean = true;
   isSaving: boolean = false;
+  isDeleting: boolean = false;
   clientList: ClientClass[] = [];
 
   clientService = inject(ClientService);
@@ -65,6 +66,7 @@ export class Client implements OnInit {
   }
 
   loadClient() {
+    // this.isLoading = true;
     this.clientService.getAllClients().subscribe((res: APIResponseModel) => {
       this.clientList = res.data;
       this.isLoading = false;
@@ -91,8 +93,8 @@ export class Client implements OnInit {
     }
 
     if (this.clientForm?.valid) {
-      console.log('onSaveClient');
-      console.log('clientForm.value', this.clientForm.value);
+      // console.log('onSaveClient');
+      // console.log('clientForm.value', this.clientForm.value);
       this.clientService.saveClient(this.clientForm.value).subscribe({
         next: (res: APIResponseModel) => {
           if (res.result) {
@@ -112,6 +114,14 @@ export class Client implements OnInit {
         },
       });
     }
+  }
+
+  onDeleteClient(clientId: number) {
+    this.isDeleting = true;
+    this.clientService.deleteClientById(clientId).subscribe((res: APIResponseModel) => {
+      this.loadClient();
+      this.isDeleting = false;
+    });
   }
 
   onReset() {

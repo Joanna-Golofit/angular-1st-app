@@ -15,6 +15,11 @@ export class ClientService {
       environment.API_URL + 'GetAllClients'
     );
   }
+  getAllEmployees() {
+    return this.http.get<APIResponseModel>(
+      environment.API_URL + 'GetAllEmployees'
+    );
+  }
 
   // saveClient(client: ClientClass) {
   //   // Convert client object to FormData

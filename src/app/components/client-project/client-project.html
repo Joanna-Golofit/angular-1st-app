@@ -1,0 +1,307 @@
+<p>client-project works!</p>
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- LISTA PROJEKTÓW -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Client Project List</h4>
+        </div>
+        <div class="card-body p-0">
+          @if (isLoading) {
+          <div class="text-center mt-4">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading data...</p>
+          </div>
+          } @else if (clientList.length > 0) {
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>Project Name</th>
+                  <th>Start Date</th>
+                  <th>Expected End Date</th>
+                  <th>Contact Person</th>
+                  <th>Contact Person Contact No</th>
+                  <th>Contact Person Email Id</th>
+                  <th>Project Details</th>
+                  <th>Project Cost</th>
+                  <th>Client</th>
+                  <th>Lead By Employee</th>
+                  <th>Completed Date</th>
+                  <th>Total Emp Working</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- @for (clientProject of clientProjectList; track
+                clientProject.clientProjectId) {
+                <tr>
+                  <td>{{ clientProject.clientProjectId }}</td>
+                  <td>{{ clientProject.projectName }}</td>
+                  <td>{{ clientProject.startDate }}</td>
+                  <td>{{ clientProject.expectedEndDate }}</td>
+                  <td>{{ clientProject.contactPerson }}</td>
+                  <td>{{ clientProject.contactPersonContactNo }}</td>
+                  <td>{{ clientProject.contactPersonEmailId }}</td>
+                  <td>{{ clientProject.projectDetails }}</td>
+                  <td>{{ clientProject.projectCost }}</td>
+                  <td>{{ clientProject.clientId }}</td>
+                  <td>{{ clientProject.leadByEmpId }}</td>
+                  <td>
+                    <div class="d-flex gap-1">
+                        <button
+                        (click)="onEditClient(client)"
+                        class="btn btn-sm btn-outline-primary me-1"
+                        style="width: 33px; height: 33px"
+                      >
+                        @if (editingClientId === client.clientId) {
+                        <span
+                          class="spinner-border spinner-border-sm"
+                          role="status"
+                        ></span>
+                        } @else {
+                        <i class="fas fa-edit"></i>
+                        }
+                      </button>
+                      <button
+                      (click)="onDeleteClient(client.clientId)"
+                        class="btn btn-sm btn-outline-danger"
+                        style="width: 33px; height: 33px"
+                      >
+                        @if (deletingClientId === client.clientId) {
+                        <span
+                          class="spinner-border spinner-border-sm"
+                          role="status"
+                        ></span>
+                        } @else {
+                        <i class="fas fa-trash"></i>
+                        }
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                } -->
+              </tbody>
+            </table>
+          </div>
+          }
+          <!-- @else { 
+          <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            No clients found. Add your first client!
+          </div>
+        } -->
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMULARZ -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          <h4 class="mb-0">{{isEdit ? 'Edit' : 'New'}} Client Project</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="projectForm" (ngSubmit)="onSaveClient()">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="projectName" class="form-label">Project Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="projectName"
+                  formControlName="projectName"
+                  placeholder="Enter project name"
+                  [class.is-invalid]="isFieldInvalid('projectName')"
+                />
+                <div class="invalid-feedback">
+                  Project name is required (min 2 characters)
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="startDate"
+                  formControlName="startDate"
+                  placeholder="Enter start date"
+                  [class.is-invalid]="isFieldInvalid('startDate')"
+                />
+                <div class="invalid-feedback">Start date is required</div>
+              </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="expectedEndDate" class="form-label"
+                  >Expected End Date</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="expectedEndDate"
+                  formControlName="expectedEndDate"
+                  placeholder="Enter expected end date"
+                  [class.is-invalid]="isFieldInvalid('expectedEndDate')"
+                />
+                <div class="invalid-feedback">
+                  Expected end date is required
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="contactPerson" class="form-label"
+                  >Contact Person</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="contactPerson"
+                  formControlName="contactPerson"
+                  placeholder="Enter contact person"
+                  [class.is-invalid]="isFieldInvalid('contactPerson')"
+                />
+                <div class="invalid-feedback">Contact person is required</div>
+              </div>
+            </div>
+
+            <!-- Row 3: State & Pincode -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="contactPersonContactNo" class="form-label"
+                  >Contact Person Contact No</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="contactPersonContactNo"
+                  formControlName="contactPersonContactNo"
+                  placeholder="Enter contact person contact no"
+                  [class.is-invalid]="isFieldInvalid('contactPersonContactNo')"
+                />
+                <div class="invalid-feedback">
+                  Contact person contact no is required
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="contactPersonEmailId" class="form-label"
+                  >Contact Person Email Id</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="contactPersonEmailId"
+                  formControlName="contactPersonEmailId"
+                  placeholder="Enter contact person email id"
+                  [class.is-invalid]="isFieldInvalid('contactPersonEmailId')"
+                />
+                <div class="invalid-feedback">
+                  Contact person email id is required
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 4: Address & Employee Strength -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="projectDetails" class="form-label"
+                  >Project Details</label
+                >
+                <input
+                  class="form-control"
+                  id="projectDetails"
+                  formControlName="projectDetails"
+                  rows="3"
+                  placeholder="Enter project details"
+                  [class.is-invalid]="isFieldInvalid('projectDetails')"
+                />
+                <div class="invalid-feedback">Project details is required</div>
+              </div>
+              <div class="col-md-6">
+                <label for="projectCost" class="form-label">Project Cost</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="projectCost"
+                  formControlName="projectCost"
+                  placeholder="Enter project cost"
+                  min="1"
+                  [class.is-invalid]="isFieldInvalid('projectCost')"
+                />
+                <div class="invalid-feedback">Project cost is required</div>
+              </div>
+            </div>
+
+            <!-- Row 5: GstNo & RegNo -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label for="clientId" class="form-label">Select Client</label>
+                <select
+                  type="text"
+                  class="form-control"
+                  id="clientId"
+                  formControlName="clientId"
+                  placeholder="Select Client"
+                  [class.is-invalid]="isFieldInvalid('clientId')"
+                >
+                  <!-- @for (client of clientList; track client.clientId) {
+                  <option value="{{ client.clientId }}">{{ client.contactPersonName }}</option>
+                  } -->
+                </select>
+                <div class="invalid-feedback">Client is required</div>
+              </div>
+              <div class="col-md-6">
+                <label for="leadByEmpId" class="form-label"
+                  >Select Employee</label
+                >
+                <select
+                  type="text"
+                  class="form-control"
+                  id="leadByEmpId"
+                  formControlName="leadByEmpId"
+                  placeholder="Select Lead Employee"
+                  [class.is-invalid]="isFieldInvalid('leadByEmpId')"
+                >
+                  <!-- @for (employee of employeeList; track employee.empId) {
+                  <option value="{{ employee.empId }}">{{ employee.empName }}</option>
+                  } -->
+                </select>
+                <div class="invalid-feedback">Employee is required</div>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-end gap-2">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="onReset()"
+                [disabled]="isSaving"
+              >
+                Reset
+              </button>
+              <button
+                type="submit"
+                class="btn"
+                [class]="(!projectForm.valid || isSaving) ? 'btn-secondary' : 'btn-success'"
+                [disabled]="projectForm.invalid || isSaving"
+              >
+                @if (isSaving) {
+                <span
+                  class="spinner-border spinner-border-sm me-2"
+                  role="status"
+                ></span>
+                Saving... } @else { {{ isEdit ? 'Update' : 'Save'}} Project }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+{
+  "/api/ClientStrive/*": {
+    "target": "https://freeapi.miniprojectideas.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

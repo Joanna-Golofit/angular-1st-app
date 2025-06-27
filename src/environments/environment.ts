@@ -1,3 +1,5 @@
 export const environment = {
-    API_URL: 'https://freeapi.miniprojectideas.com/api/ClientStrive/'
+    production: false,
+    API_URL: '/api/ClientStrive/'
+    // API_URL: 'https://freeapi.miniprojectideas.com/api/ClientStrive/'
 };

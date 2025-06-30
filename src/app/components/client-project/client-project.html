@@ -106,7 +106,7 @@
           <h4 class="mb-0">{{isEdit ? 'Edit' : 'New'}} Client Project</h4>
         </div>
         <div class="card-body">
-          <form [formGroup]="projectForm" (ngSubmit)="onSaveClient()">
+          <form [formGroup]="projectForm" (ngSubmit)="onSave()">
             <div class="row mb-3">
               <div class="col-md-6">
                 <label for="projectName" class="form-label">Project Name</label>
@@ -249,9 +249,9 @@
                   placeholder="Select Client"
                   [class.is-invalid]="isFieldInvalid('clientId')"
                 >
-                  <!-- @for (client of clientList; track client.clientId) {
-                  <option value="{{ client.clientId }}">{{ client.contactPersonName }}</option>
-                  } -->
+                  @for (client of clientList; track client.clientId) {
+                  <option value="{{ client.clientId }}">{{ client.companyName }}</option>
+                  }
                 </select>
                 <div class="invalid-feedback">Client is required</div>
               </div>
@@ -267,9 +267,9 @@
                   placeholder="Select Lead Employee"
                   [class.is-invalid]="isFieldInvalid('leadByEmpId')"
                 >
-                  <!-- @for (employee of employeeList; track employee.empId) {
+                  @for (employee of employeeList; track employee.empId) {
                   <option value="{{ employee.empId }}">{{ employee.empName }}</option>
-                  } -->
+                  }
                 </select>
                 <div class="invalid-feedback">Employee is required</div>
               </div>

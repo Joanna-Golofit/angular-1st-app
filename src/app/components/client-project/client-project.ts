@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ClientService } from '../../services/client';
-import { APIResponseModel } from '../model/interface/role';
+import { APIResponseModel, IEmployee } from '../model/interface/role';
 import { ClientClass } from '../model/class/Client';
 import { ClientProjectClass } from '../model/class/ClientProject.class';
 
@@ -32,6 +32,7 @@ export class ClientProject implements OnInit {
   editingClientId: number | null = null;
 
   clientList: ClientClass[] = [];
+  employeeList: IEmployee[] = [];
 
   clientService = inject(ClientService);
 
@@ -62,11 +63,19 @@ export class ClientProject implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadClient();
+    this.getAllClient();
+    this.getAllEmployee();
     this.initializeForm();
   }
+  getAllEmployee() {
+    this.clientService.getAllEmployee().subscribe((res: APIResponseModel) => {
+      this.employeeList = res.data;
+      this.isLoading = false;
 
-  loadClient() {
+    });
+  }
+
+  getAllClient() {
     // this.isLoading = true;
     this.clientService.getAllClients().subscribe((res: APIResponseModel) => {
       this.clientList = res.data;
@@ -74,7 +83,7 @@ export class ClientProject implements OnInit {
     });
   }
 
-  onSaveClient() {
+  onSave() {
     this.isSaving = true;
     if (this.projectForm?.invalid) {
       console.log('=== NIEPRAWIDŁOWE POLA ===');
@@ -103,7 +112,7 @@ export class ClientProject implements OnInit {
             this.editingClientId = null;
             alert(res.message);
             this.projectForm.reset();
-            this.loadClient();
+            this.getAllClient();
           } else {
             alert(res.message);
           }
@@ -152,7 +161,7 @@ export class ClientProject implements OnInit {
           this.deletingClientId = null;
           // alert(res.message);
           this.projectForm.reset();
-          this.loadClient();
+          this.getAllClient();
         } else {
           alert(res.message);
           this.deletingClientId = null;

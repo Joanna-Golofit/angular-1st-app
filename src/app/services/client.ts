@@ -15,9 +15,9 @@ export class ClientService {
       environment.API_URL + 'GetAllClients'
     );
   }
-  getAllEmployees() {
+  getAllEmployee() {
     return this.http.get<APIResponseModel>(
-      environment.API_URL + 'GetAllEmployees'
+      environment.API_URL + 'GetAllEmployee'
     );
   }
 

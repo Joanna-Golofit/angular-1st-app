@@ -3,6 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { APIResponseModel } from '../components/model/interface/role';
 import { ClientClass } from '../components/model/class/Client';
+import { ClientProjectClass } from '../components/model/class/ClientProject.class';
+import { Constant } from '../components/constant/Constant';
 
 @Injectable({
   providedIn: 'root',
@@ -12,13 +14,22 @@ export class ClientService {
 
   getAllClients() {
     return this.http.get<APIResponseModel>(
-      environment.API_URL + 'GetAllClients'
+      environment.API_URL + Constant.API_METHOD.GET_ALL_CLIENT
+    );
+  }
+  getAllClientProject() {
+    return this.http.get<APIResponseModel>(
+      environment.API_URL + Constant.API_METHOD.GET_ALL_CLIENT_PROJECT
     );
   }
   getAllEmployee() {
     return this.http.get<APIResponseModel>(
-      environment.API_URL + 'GetAllEmployee'
+      // environment.API_URL + 'GetAllEmployee'
+      environment.API_URL + Constant.API_METHOD.GET_ALL_EMP
     );
+  }
+  getAllUser() {
+    return this.http.get("https://jsonplaceholder.typicode.com/users");
   }
 
   // saveClient(client: ClientClass) {
@@ -35,7 +46,7 @@ export class ClientService {
   //   formData.append('EmployeeStrength', client.EmployeeStrength);
   //   formData.append('gstNo', client.gstNo);
   //   formData.append('regNo', client.regNo);
-    
+
   //   return this.http.post<APIResponseModel>(
   //     environment.API_URL + 'AddUpdateClient',
   //     formData
@@ -55,7 +66,7 @@ export class ClientService {
   //   formData.append('gstNo', client.gstNo || '');
   //   formData.append('contactNo', client.contactNo);
   //   formData.append('regNo', client.regNo || '');
-    
+
   //   return this.http.post<APIResponseModel>(
   //     environment.API_URL + 'AddUpdateClient',
   //     formData
@@ -77,7 +88,7 @@ export class ClientService {
   //     gstNo: client.gstNo || '',
   //     regNo: client.regNo || ''
   //   };
-    
+
   //   return this.http.post<APIResponseModel>(
   //     environment.API_URL + 'AddUpdateClient',
   //     clientData  // JSON zamiast FormData
@@ -85,12 +96,19 @@ export class ClientService {
   // }
 
   saveClient(client: ClientClass) {
-   
     return this.http.post<APIResponseModel>(
       environment.API_URL + 'AddUpdateClient',
       client
     );
   }
+
+  saveClientProject(clientProject: ClientProjectClass) {
+    return this.http.post<APIResponseModel>(
+      environment.API_URL + 'AddUpdateClientProject',
+      clientProject
+    );
+  }
+
   deleteClientById(id: number) {
     return this.http.delete<APIResponseModel>(
       environment.API_URL + 'DeleteClientByClientId?clientId=' + id

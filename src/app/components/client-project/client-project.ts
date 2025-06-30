@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,16 +9,20 @@ import {
   Validators,
 } from '@angular/forms';
 import { ClientService } from '../../services/client';
-import { APIResponseModel, IEmployee } from '../model/interface/role';
+import {
+  APIResponseModel,
+  IEmployee,
+} from '../model/interface/role';
 import { ClientClass } from '../model/class/Client';
 import { ClientProjectClass } from '../model/class/ClientProject.class';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-client-project',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, AsyncPipe, DatePipe],
 
   templateUrl: './client-project.html',
-  styleUrl: './client-project.css'
+  styleUrl: './client-project.css',
 })
 export class ClientProject implements OnInit {
   http = inject(HttpClient);
@@ -33,6 +37,9 @@ export class ClientProject implements OnInit {
 
   clientList: ClientClass[] = [];
   employeeList: IEmployee[] = [];
+  clientProjectList = signal<ClientProjectClass[]>([]);
+
+  userList$: Observable<any> = new Observable<any>();
 
   clientService = inject(ClientService);
 
@@ -48,12 +55,24 @@ export class ClientProject implements OnInit {
       leadByEmpId: [defaultProject.leadByEmpId, [Validators.required]],
       completedDate: [defaultProject.completedDate],
       contactPerson: [defaultProject.contactPerson, [Validators.required]],
-      contactPersonContactNo: [defaultProject.contactPersonContactNo, [Validators.required, Validators.pattern('^[0-9]{6,12}$')]],
-      totalEmpWorking: [defaultProject.totalEmpWorking, [Validators.required, Validators.min(1)]],
-      projectCost: [defaultProject.projectCost, [Validators.required, Validators.min(0)]],
+      contactPersonContactNo: [
+        defaultProject.contactPersonContactNo,
+        [Validators.required, Validators.pattern('^[0-9]{6,12}$')],
+      ],
+      totalEmpWorking: [
+        defaultProject.totalEmpWorking,
+        [Validators.required, Validators.min(1)],
+      ],
+      projectCost: [
+        defaultProject.projectCost,
+        [Validators.required, Validators.min(0)],
+      ],
       projectDetails: [defaultProject.projectDetails, [Validators.required]],
-      contactPersonEmailId: [defaultProject.contactPersonEmailId, [Validators.required, Validators.email]],
-      clientId: [defaultProject.clientId, [Validators.required]]
+      contactPersonEmailId: [
+        defaultProject.contactPersonEmailId,
+        [Validators.required, Validators.email],
+      ],
+      clientId: [defaultProject.clientId, [Validators.required]],
     });
   }
 
@@ -63,15 +82,16 @@ export class ClientProject implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userList$ = this.clientService.getAllUser();
     this.getAllClient();
     this.getAllEmployee();
     this.initializeForm();
+    this.getAllClientProject();
   }
   getAllEmployee() {
     this.clientService.getAllEmployee().subscribe((res: APIResponseModel) => {
       this.employeeList = res.data;
       this.isLoading = false;
-
     });
   }
 
@@ -82,8 +102,17 @@ export class ClientProject implements OnInit {
       this.isLoading = false;
     });
   }
+  getAllClientProject() {
+    // this.isLoading = true;
+    this.clientService.getAllClientProject().subscribe((res: APIResponseModel) => {
+      console.log('res', res.data);
+      this.clientProjectList.set(res.data);
+      console.log('clientProjectList', this.clientProjectList());
+      this.isLoading = false;
+    });
+  }
 
-  onSave() {
+  onSaveProject() {
     this.isSaving = true;
     if (this.projectForm?.invalid) {
       console.log('=== NIEPRAWIDŁOWE POLA ===');
@@ -104,7 +133,7 @@ export class ClientProject implements OnInit {
     if (this.projectForm?.valid) {
       // console.log('onSaveClient');
       // console.log('projectForm.value', this.projectForm.value);
-      this.clientService.saveClient(this.projectForm.value).subscribe({
+      this.clientService.saveClientProject(this.projectForm.value).subscribe({
         next: (res: APIResponseModel) => {
           if (res.result) {
             this.isSaving = false;
@@ -112,7 +141,8 @@ export class ClientProject implements OnInit {
             this.editingClientId = null;
             alert(res.message);
             this.projectForm.reset();
-            this.getAllClient();
+            this.getAllClientProject();
+            // this.getAllClient();
           } else {
             alert(res.message);
           }
@@ -138,7 +168,7 @@ export class ClientProject implements OnInit {
     this.isEdit = true;
     const clientData = {
       ...client,
-      EmployeeStrength: Number((client as any).employeeStrength) || 0, // ← Konwertuj 
+      EmployeeStrength: Number((client as any).employeeStrength) || 0, // ← Konwertuj
     };
     console.log('client', client);
     this.projectForm.patchValue(clientData);

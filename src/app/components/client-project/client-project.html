@@ -1,4 +1,9 @@
 <p>client-project works!</p>
+ <!-- <ul>
+  @for (user of userList$ | async; track user.id) {
+  <li>{{user.name}}</li>
+  }
+ </ul> -->
 <div class="container-fluid mt-4">
   <div class="row">
     <!-- LISTA PROJEKTÓW -->
@@ -22,69 +27,30 @@
                 <tr>
                   <th>ID</th>
                   <th>Project Name</th>
+                  <th>Client</th>
                   <th>Start Date</th>
                   <th>Expected End Date</th>
-                  <th>Contact Person</th>
-                  <th>Contact Person Contact No</th>
-                  <th>Contact Person Email Id</th>
-                  <th>Project Details</th>
-                  <th>Project Cost</th>
-                  <th>Client</th>
-                  <th>Lead By Employee</th>
-                  <th>Completed Date</th>
-                  <th>Total Emp Working</th>
-                  <th>Actions</th>
+                  <!-- <th>Contact Email</th> -->
+                  <th>Designation</th>
+                 
+                  <!-- <th>Actions</th> -->
                 </tr>
               </thead>
               <tbody>
-                <!-- @for (clientProject of clientProjectList; track
-                clientProject.clientProjectId) {
+                @for (item of clientProjectList(); track
+                item.clientProjectId) {
                 <tr>
-                  <td>{{ clientProject.clientProjectId }}</td>
-                  <td>{{ clientProject.projectName }}</td>
-                  <td>{{ clientProject.startDate }}</td>
-                  <td>{{ clientProject.expectedEndDate }}</td>
-                  <td>{{ clientProject.contactPerson }}</td>
-                  <td>{{ clientProject.contactPersonContactNo }}</td>
-                  <td>{{ clientProject.contactPersonEmailId }}</td>
-                  <td>{{ clientProject.projectDetails }}</td>
-                  <td>{{ clientProject.projectCost }}</td>
-                  <td>{{ clientProject.clientId }}</td>
-                  <td>{{ clientProject.leadByEmpId }}</td>
-                  <td>
-                    <div class="d-flex gap-1">
-                        <button
-                        (click)="onEditClient(client)"
-                        class="btn btn-sm btn-outline-primary me-1"
-                        style="width: 33px; height: 33px"
-                      >
-                        @if (editingClientId === client.clientId) {
-                        <span
-                          class="spinner-border spinner-border-sm"
-                          role="status"
-                        ></span>
-                        } @else {
-                        <i class="fas fa-edit"></i>
-                        }
-                      </button>
-                      <button
-                      (click)="onDeleteClient(client.clientId)"
-                        class="btn btn-sm btn-outline-danger"
-                        style="width: 33px; height: 33px"
-                      >
-                        @if (deletingClientId === client.clientId) {
-                        <span
-                          class="spinner-border spinner-border-sm"
-                          role="status"
-                        ></span>
-                        } @else {
-                        <i class="fas fa-trash"></i>
-                        }
-                      </button>
-                    </div>
-                  </td>
+                  <td>{{ item.clientProjectId }}</td>
+                  <td>{{ item.projectName}}</td>
+                  <td>{{ item.clientName }}</td>
+                  <td>{{ item.startDate | date }}</td>
+                  <td>{{ item.expectedEndDate | date }}</td>
+                  <!-- <td>{{ item.empEmailId }}</td> -->
+                  <td>{{ item.empDesignation }}</td>
+                  
+                 
                 </tr>
-                } -->
+                }
               </tbody>
             </table>
           </div>
@@ -106,7 +72,7 @@
           <h4 class="mb-0">{{isEdit ? 'Edit' : 'New'}} Client Project</h4>
         </div>
         <div class="card-body">
-          <form [formGroup]="projectForm" (ngSubmit)="onSave()">
+          <form [formGroup]="projectForm" (ngSubmit)="onSaveProject()">
             <div class="row mb-3">
               <div class="col-md-6">
                 <label for="projectName" class="form-label">Project Name</label>
@@ -305,3 +271,37 @@
     </div>
   </div>
 </div>
+
+
+<!-- <td>
+  <div class="d-flex gap-1">
+    <button
+    (click)="onEditClient(clientProject)"
+      class="btn btn-sm btn-outline-primary me-1"
+      style="width: 33px; height: 33px"
+    >
+      @if (editingClientId === client.clientId) {
+      <span
+        class="spinner-border spinner-border-sm"
+        role="status"
+      ></span>
+      } @else {
+      <i class="fas fa-edit"></i>
+      }
+    </button>
+    <button
+    (click)="onDeleteClient(client.clientId)"
+      class="btn btn-sm btn-outline-danger"
+      style="width: 33px; height: 33px"
+    >
+      @if (deletingClientId === client.clientId) {
+      <span
+        class="spinner-border spinner-border-sm"
+        role="status"
+      ></span>
+      } @else {
+      <i class="fas fa-trash"></i>
+      }
+    </button>
+  </div>
+</td> -->

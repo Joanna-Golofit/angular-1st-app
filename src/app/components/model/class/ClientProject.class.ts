@@ -12,4 +12,7 @@ export class ClientProjectClass {
     projectDetails: string = '';
     contactPersonEmailId: string = '';
     clientId: number = 0;
+    clientName: string = '';
+    empEmailId: string = '';
+    empDesignation: string = '';
 }

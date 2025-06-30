@@ -16,10 +16,11 @@ import {
 import { ClientClass } from '../model/class/Client';
 import { ClientProjectClass } from '../model/class/ClientProject.class';
 import { Observable } from 'rxjs';
+import { Toast } from '../common/toast/toast/toast';
 
 @Component({
   selector: 'app-client-project',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, AsyncPipe, DatePipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, AsyncPipe, DatePipe, Toast],
 
   templateUrl: './client-project.html',
   styleUrl: './client-project.css',

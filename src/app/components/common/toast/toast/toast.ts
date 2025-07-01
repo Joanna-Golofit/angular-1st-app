@@ -9,4 +9,5 @@ import { Component, input } from '@angular/core';
 export class Toast {
   alertType = input<'success' | 'danger' | 'warning' | 'info'>('success');
   message = input<string>('');
+  isVisible = input<boolean>(false);
 }

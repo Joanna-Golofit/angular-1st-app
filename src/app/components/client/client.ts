@@ -11,6 +11,7 @@ import {
 import { ClientService } from '../../services/client';
 import { APIResponseModel } from '../model/interface/role';
 import { ClientClass } from '../model/class/Client';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-client',
@@ -25,7 +26,6 @@ export class Client implements OnInit {
   isLoading: boolean = true;
   isSaving: boolean = false;
   isEdit: boolean = false;
-  isDeleting: boolean = false;
   deletingClientId: number | null = null;
   editingClientId: number | null = null;
 
@@ -34,6 +34,8 @@ export class Client implements OnInit {
   clientService = inject(ClientService);
 
   clientForm!: FormGroup;
+
+  toastService = inject(ToastService);
 
   private initializeForm() {
     this.clientForm = this.fb.group({
@@ -71,7 +73,6 @@ export class Client implements OnInit {
   }
 
   loadClient() {
-    // this.isLoading = true;
     this.clientService.getAllClients().subscribe((res: APIResponseModel) => {
       this.clientList = res.data;
       this.isLoading = false;
@@ -91,54 +92,42 @@ export class Client implements OnInit {
           console.log(`✅ ${key}: OK`);
         }
       });
-      console.log('========================');
       this.isSaving = false;
       return;
     }
 
     if (this.clientForm?.valid) {
-      // console.log('onSaveClient');
-      // console.log('clientForm.value', this.clientForm.value);
       this.clientService.saveClient(this.clientForm.value).subscribe({
         next: (res: APIResponseModel) => {
           if (res.result) {
             this.isSaving = false;
             this.isEdit = false;
             this.editingClientId = null;
-            alert(res.message);
+            this.toastService.showToast('success', res.message);
             this.clientForm.reset();
             this.loadClient();
           } else {
-            alert(res.message);
+            this.toastService.showToast('warning', res.message);
           }
         },
         error: (error: any) => {
           this.isSaving = false;
           this.editingClientId = null;
-          alert('Error: ' + JSON.stringify(error.error));
+          this.toastService.showToast('danger', 'Error: ' + JSON.stringify(error.error));
         },
       });
     }
   }
-  // onEditClient(client: ClientClass) {
-  //   this.clientForm = {...client};
-  //   console.log('onEditClient');
-
-  // }
 
   onEditClient(client: ClientClass) {
-    // console.log("przed zmiana", this.clientForm);
-    console.log('client fields:', Object.keys(client));
     this.editingClientId = client.clientId;
     this.isEdit = true;
     const clientData = {
       ...client,
       EmployeeStrength: Number((client as any).employeeStrength) || 0, // ← Konwertuj 
     };
-    console.log('client', client);
     this.clientForm.patchValue(clientData);
     this.clientForm.markAllAsTouched();
-    console.log('onEditClient');
   }
 
   onDeleteClient(clientId: number) {
@@ -146,40 +135,28 @@ export class Client implements OnInit {
     if (!shallDelete) {
       return;
     }
-    // this.isDeleting = true;
     this.deletingClientId = clientId;
 
     this.clientService.deleteClientById(clientId).subscribe({
       next: (res: APIResponseModel) => {
         if (res.result) {
-          // this.isDeleting = false;
           this.deletingClientId = null;
-          // alert(res.message);
+          this.toastService.showToast('info', res.message);
           this.clientForm.reset();
           this.loadClient();
         } else {
-          alert(res.message);
+          this.toastService.showToast('warning', res.message);
           this.deletingClientId = null;
         }
       },
       error: (error: any) => {
-        // this.isDeleting = false;
         this.deletingClientId = null;
-        alert('Error: ' + JSON.stringify(error.error));
+        this.toastService.showToast('danger', 'Error: ' + JSON.stringify(error.error));
       },
     });
   }
 
-  // onDeleteClient(clientId: number) {
-  //   this.isDeleting = true;
-  //   this.clientService.deleteClientById(clientId).subscribe((res: APIResponseModel) => {
-  //     this.loadClient();
-  //     this.isDeleting = false;
-  //   });
-  // }
-
   onReset() {
-    console.log('onReset');
     this.clientForm.reset();
     this.isEdit = false;
     this.editingClientId = null;

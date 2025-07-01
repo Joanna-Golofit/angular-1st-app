@@ -1,4 +1,4 @@
-import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import {
@@ -16,11 +16,11 @@ import {
 import { ClientClass } from '../model/class/Client';
 import { ClientProjectClass } from '../model/class/ClientProject.class';
 import { Observable } from 'rxjs';
-import { Toast } from '../common/toast/toast/toast';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-client-project',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, AsyncPipe, DatePipe, Toast],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DatePipe],
 
   templateUrl: './client-project.html',
   styleUrl: './client-project.css',
@@ -28,6 +28,8 @@ import { Toast } from '../common/toast/toast/toast';
 export class ClientProject implements OnInit {
   http = inject(HttpClient);
   fb = inject(FormBuilder);
+
+  toastService = inject(ToastService);
 
   isLoading: boolean = true;
   isSaving: boolean = false;
@@ -140,7 +142,8 @@ export class ClientProject implements OnInit {
             this.isSaving = false;
             this.isEdit = false;
             this.editingClientId = null;
-            alert(res.message);
+            this.toastService.showToast('success', res.message);
+            // alert(res.message);
             this.projectForm.reset();
             this.getAllClientProject();
             // this.getAllClient();
@@ -177,42 +180,37 @@ export class ClientProject implements OnInit {
     console.log('onEditClient');
   }
 
-  onDeleteClient(clientId: number) {
-    const shallDelete = confirm('Are you sure you want to delete this client?');
-    if (!shallDelete) {
-      return;
-    }
-    // this.isDeleting = true;
-    this.deletingClientId = clientId;
-
-    this.clientService.deleteClientById(clientId).subscribe({
-      next: (res: APIResponseModel) => {
-        if (res.result) {
-          // this.isDeleting = false;
-          this.deletingClientId = null;
-          // alert(res.message);
-          this.projectForm.reset();
-          this.getAllClient();
-        } else {
-          alert(res.message);
-          this.deletingClientId = null;
-        }
-      },
-      error: (error: any) => {
-        // this.isDeleting = false;
-        this.deletingClientId = null;
-        alert('Error: ' + JSON.stringify(error.error));
-      },
-    });
-  }
-
   // onDeleteClient(clientId: number) {
-  //   this.isDeleting = true;
-  //   this.clientService.deleteClientById(clientId).subscribe((res: APIResponseModel) => {
-  //     this.loadClient();
-  //     this.isDeleting = false;
+  //   const shallDelete = confirm('Are you sure you want to delete this client?');
+  //   if (!shallDelete) {
+  //     return;
+  //   }
+  //   // this.isDeleting = true;
+  //   this.deletingClientId = clientId;
+
+  //   this.clientService.deleteClientById(clientId).subscribe({
+  //     next: (res: APIResponseModel) => {
+  //       if (res.result) {
+  //         // this.isDeleting = false;
+  //         this.deletingClientId = null;
+  //         // alert(res.message);
+  //         this.toastService.showToast('success', res.message);
+  //         this.projectForm.reset();
+  //         this.getAllClient();
+  //       } else {
+  //         alert(res.message);
+  //         this.deletingClientId = null;
+  //       }
+  //     },
+  //     error: (error: any) => {
+  //       // this.isDeleting = false;
+  //       this.deletingClientId = null;
+  //       alert('Error: ' + JSON.stringify(error.error));
+  //     },
   //   });
   // }
+
+ 
 
   onReset() {
     console.log('onReset');

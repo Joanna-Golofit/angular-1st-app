@@ -1,3 +1,5 @@
-<div class="alert alert-{{alertType()}}" role="alert">
-    {{message()}}
-  </div>
+@if (isVisible()) {
+<div class="toast-container">
+  <div class="alert alert-{{alertType()}}" role="alert">{{ message()}}</div>
+</div>
+}

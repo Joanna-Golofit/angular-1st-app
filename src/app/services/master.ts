@@ -10,7 +10,7 @@ export class MasterService {
 
   getDesignations() {
     return this.http.get<APIResponseModel>(
-      'https://freeapi.miniprojectideas.com/api/ClientStrive/GetAllDesignation'
+      '/api/ClientStrive/GetAllDesignation'
     );
   }
 }

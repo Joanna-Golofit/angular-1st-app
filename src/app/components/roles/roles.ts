@@ -30,7 +30,7 @@ export class Roles implements OnInit {
   // }
   getAllRoles() {
     this.http
-      .get('https://freeapi.miniprojectideas.com/api/ClientStrive/GetAllRoles')
+      .get('/api/ClientStrive/GetAllRoles')
       .pipe(
         finalize(() => {
           this.isLoading = false; // ← ZAWSZE się wykona
